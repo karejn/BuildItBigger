@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JokerViewer</string>
+    <string name="joke_key">JOKE_KEY</string>
+    <string name="joke_error">opps there is no joke</string>
+</resources>

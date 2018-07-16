@@ -1,0 +1,91 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:endpoints-framework-gradle-plugin:1.0.2'
+    }
+}
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        applicationId "com.udacity.gradle.builditbigger"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        flavorDimensions "default"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    flavorDimensions "projVar"
+
+    productFlavors {
+        free {
+            applicationId "com.udacity.gradle.builditbigger.free"
+            dimension "projVar"
+            versionName "1.0-free"
+        }
+
+        paid {
+            applicationId "com.udacity.gradle.builditbigger.paid"
+            dimension "projVar"
+            versionName "1.0-paid"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:support-v4:26.1.0'
+    endpointsServer project(path: ':backend', configuration: 'endpoints')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    freeImplementation  'com.google.android.gms:play-services-ads:15.0.0'
+    implementation 'com.google.api-client:google-api-client:1.23.0'
+    implementation 'com.google.http-client:google-http-client-android:1.23.0'
+    implementation 'com.google.code.findbugs:jsr305:3.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+
+    //add joker server "java library" to get jokes to app
+    implementation project(":JokerServer")
+    //add joker viewer "android library" to preview jokes
+    implementation project(":jokerviewer")
+
+    //Test
+    implementation 'com.android.support:support-v4:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support:support-annotations:26.1.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation "com.android.support.test.espresso:espresso-idling-resource:3.0.1"
+    androidTestImplementation ("com.android.support.test.espresso:espresso-intents:3.0.1")
+
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+}
